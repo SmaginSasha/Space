@@ -18,7 +18,7 @@ url_EPIC = "https://api.nasa.gov/EPIC/api/natural?api_key=DEMO_KEY"
 
 def ensure_dir():
     os.path.exists(file_path)
-    os.makedirs(file_path, exist_ok=False)
+    os.makedirs(file_path, exist_ok=True)
 
 
 ensure_dir()
@@ -43,7 +43,7 @@ def fetch_spacex_last_launch(url_spacex, file_path):
             for i in range(len(file_path_photoes)):
                 photo_spacex_url = response_spacex.json()[j]["links"]["flickr"]["original"][i]
                 photo_spacex = requests.get(photo_spacex_url)
-                with open(f"{file_path} spacex {str(i + 1)} .jpg", 'wb') as dir:
+                with open(f"{file_path} spacex{str(i + 1)}.jpg", 'wb') as dir:
                     dir.write(photo_spacex.content)
             return
         j -= 1
@@ -59,13 +59,12 @@ def fetch_NASA_day_launch(url_NASA, file_path):
 
     image_NASA = response_NASA.json()["url"]
 
-    expansion = get_extension_filename(image_NASA)[0]
-    filename = get_extension_filename(image_NASA)[1]
+    expansion = get_extension_filename(image_NASA)[1]
 
     response_image_NASA = requests.get(image_NASA)
     response_image_NASA.raise_for_status()
 
-    with open(f"{file_path} {filename} {expansion}", 'wb') as dir:
+    with open(f"{file_path}image_NASA{expansion}", 'wb') as dir:
         dir.write(response_image_NASA.content)
 
 
@@ -83,7 +82,7 @@ def get_image_EPIC(url_EPIC, token):
         response_image_EPIC = requests.get(url_image_EPIC)
         response_image_EPIC.raise_for_status()
 
-        with open(f"{file_path} planet {str(i + 1)} .png", 'wb') as dir:
+        with open(f"{file_path} planet{str(i + 1)}.png", 'wb') as dir:
             dir.write(response_image_EPIC.content)
 
 
