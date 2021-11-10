@@ -13,7 +13,7 @@ TOKEN_BOT=2976499477:AAFEitPtOkiN125lOHhOQAk0e8Zc_ZfpD7u
 TOKEN_NASA=tKkHEr4hPTiXLdMCnep2DuTHKvtRzHyJEIpoLdiO
 ```
 
-Python3 должен быть уже установлен. Затем используйте `pip` (или `pip3`, есть есть конфликт с Python2) для установки зависимостей:
+Python3 должен быть уже установлен. Затем используйте `pip` (или `pip3`, есть конфликт с Python2) для установки зависимостей:
 
 ```pip install -r requirements.txt```
 
