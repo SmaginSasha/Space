@@ -12,12 +12,7 @@ chat_id = bot.get_updates()[-1].message.chat_id
 file_path = "images/"
 
 
-def ensure_dir():
-    os.path.exists(file_path)
-    os.makedirs(file_path, exist_ok=True)
-
-    
-ensure_dir()
+os.makedirs(file_path, exist_ok=True)
 
 
 def get_image(file_path):
