@@ -60,6 +60,8 @@ def fetch_NASA_day_launch(url_NASA, file_path):
     image_NASA = response_NASA.json()["url"]
 
     expansion = get_extension_filename(image_NASA)[1]
+    filename = get_extension_filename(image_NASA)[0]
+
 
     response_image_NASA = requests.get(image_NASA)
     response_image_NASA.raise_for_status()
