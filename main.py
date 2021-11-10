@@ -84,7 +84,7 @@ def get_image_EPIC(url_EPIC, token):
         response_image_EPIC = requests.get(url_image_EPIC)
         response_image_EPIC.raise_for_status()
 
-        with open(f"{file_path} planet{str(i + 1)}.png", 'wb') as dir:
+        with open(f"{file_path}planet{str(i + 1)}.png", 'wb') as dir:
             dir.write(response_image_EPIC.content)
 
 
