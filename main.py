@@ -5,7 +5,7 @@ import random
 import time
 
 
-token_telegram_bot = os.environ['TOKEN_BOT']
+token_telegram_bot = os.environ['TELEGRAM_TOKEN']
 token_NASA = os.environ['TOKEN_NASA']
 bot = telegram.Bot(token=token_telegram_bot)
 chat_id = bot.get_updates()[-1].message.chat_id
