@@ -30,19 +30,16 @@ def fetch_spacex_last_launch(file_path):
 
     response_spacex = requests.get(url_spacex)
     response_spacex.raise_for_status()
-    j = -1
-
-    while True:
-        file_path_photoes = response_spacex.json()[j]["links"]["flickr"]["original"]
+    reverse_response_spacex = response_spacex.json()(reversed())
+    print(reverse_response_spacex)
+    for launch in reverse_response_spacex:
+        file_path_photoes = launch["links"]["flickr"]["original"]
         if len(file_path_photoes) != 0:
-            for i in range(len(file_path_photoes)):
-                photo_spacex_url = response_spacex.json()[j]["links"]["flickr"]["original"][i]
-                photo_spacex = requests.get(photo_spacex_url)
-                with open(f"{file_path}spacex{str(i + 1)}.jpg", 'wb') as dir:
-                    dir.write(photo_spacex.content)
+            for count, url_image_spacex in enumerate(file_path_photoes):
+                image_spacex = requests.get(url_image_spacex)
+                with open(f"{file_path}spacex{str(count)}.jpg", 'wb') as dir:
+                    dir.write(image_spacex.content)
             return
-        j -= 1
-
 
 def get_extension_filename(image_NASA):
           return os.path.splitext(image_NASA)
