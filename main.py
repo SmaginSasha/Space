@@ -38,7 +38,7 @@ def fetch_spacex_last_launch(file_path):
             for i in range(len(file_path_photoes)):
                 photo_spacex_url = response_spacex.json()[j]["links"]["flickr"]["original"][i]
                 photo_spacex = requests.get(photo_spacex_url)
-                with open(f"{file_path} spacex{str(i + 1)}.jpg", 'wb') as dir:
+                with open(f"{file_path}spacex{str(i + 1)}.jpg", 'wb') as dir:
                     dir.write(photo_spacex.content)
             return
         j -= 1
@@ -49,9 +49,10 @@ def get_extension_filename(image_NASA):
 
           
 def fetch_NASA_day_launch(file_path, token_NASA):
-    url_NASA = f"https://api.nasa.gov/planetary/apod?api_key={token_NASA}"
+    payload = {"api_key": f"{token_NASA}"}
+    url_NASA = f"https://api.nasa.gov/planetary/apod"
 
-    response_NASA = requests.get(url_NASA)
+    response_NASA = requests.get(url_NASA, params=payload)
     response_NASA.raise_for_status()
 
     image_NASA = response_NASA.json()["url"]
@@ -68,9 +69,10 @@ def fetch_NASA_day_launch(file_path, token_NASA):
 
 
 def get_image_EPIC(token):
-    url_EPIC = "https://api.nasa.gov/EPIC/api/natural?api_key=DEMO_KEY"
+    payload = {"api_key": "DEMO_KEY"}
+    url_EPIC = "https://api.nasa.gov/EPIC/api/natural"
 
-    response_EPIC = requests.get(url_EPIC)
+    response_EPIC = requests.get(url_EPIC, params=payload)
     response_EPIC.raise_for_status()
     reponse_EPIC_json = response_EPIC.json()
 
