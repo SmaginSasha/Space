@@ -4,13 +4,11 @@ import telegram
 import random
 import time
 
-
 token_telegram_bot = os.environ['TELEGRAM_TOKEN']
 token_NASA = os.environ['TOKEN_NASA']
 bot = telegram.Bot(token=token_telegram_bot)
 chat_id = bot.get_updates()[-1].message.chat_id
 file_path = "images/"
-
 
 os.makedirs(file_path, exist_ok=True)
 
@@ -25,44 +23,43 @@ def get_image(file_path):
     with open(f"{file_path} {filename_HST_SM4}", 'wb') as dir:
         dir.write(response_HST_SM4.content)
 
+
 def fetch_spacex_last_launch(file_path):
     url_spacex = "https://api.spacexdata.com/v4/launches/"
 
     response_spacex = requests.get(url_spacex)
     response_spacex.raise_for_status()
-    reverse_response_spacex = response_spacex.json()(reversed())
-    print(reverse_response_spacex)
+    reverse_response_spacex = list(reversed(response_spacex.json()))
     for launch in reverse_response_spacex:
         file_path_photoes = launch["links"]["flickr"]["original"]
         if len(file_path_photoes) != 0:
             for count, url_image_spacex in enumerate(file_path_photoes):
                 image_spacex = requests.get(url_image_spacex)
-                with open(f"{file_path}spacex{str(count)}.jpg", 'wb') as dir:
+                with open(f"{file_path}spacex{str(count + 1)}.jpg", 'wb') as dir:
                     dir.write(image_spacex.content)
             return
 
-def get_extension_filename(image_NASA):
-          return os.path.splitext(image_NASA)
 
-          
+def get_extension_filename(image_NASA):
+    return os.path.splitext(image_NASA)
+
+
 def fetch_NASA_day_launch(file_path, token_NASA):
-    payload = {"api_key": f"{token_NASA}"}
-    url_NASA = f"https://api.nasa.gov/planetary/apod"
+    payload = {"api_key": f"{token_NASA}", "count": "20", "thumbs": True}
+    url_NASA = "https://api.nasa.gov/planetary/apod"
 
     response_NASA = requests.get(url_NASA, params=payload)
     response_NASA.raise_for_status()
 
-    image_NASA = response_NASA.json()["url"]
+    for count, launch in enumerate(response_NASA.json()):
+        image_NASA = launch["url"]
+        expansion = get_extension_filename(image_NASA)[1]
 
-    expansion = get_extension_filename(image_NASA)[1]
-    filename = get_extension_filename(image_NASA)[0]
+        response_image_NASA = requests.get(image_NASA)
+        response_image_NASA.raise_for_status()
 
-
-    response_image_NASA = requests.get(image_NASA)
-    response_image_NASA.raise_for_status()
-
-    with open(f"{file_path} {filename} {expansion}", 'wb') as dir:
-        dir.write(response_image_NASA.content)
+        with open(f"{file_path}NASA{str(count + 1)}{expansion}", 'wb') as dir:
+            dir.write(response_image_NASA.content)
 
 
 def get_image_EPIC(token):
@@ -78,7 +75,7 @@ def get_image_EPIC(token):
         image_date_EPIC = image_date_EPIC.split("-", 2)
         image_name_EPIC = reponse_EPIC_json[i]["image"]
         url_image_EPIC = f"https://api.nasa.gov/EPIC/archive/natural/{image_date_EPIC[0]}/{image_date_EPIC[1]}/{image_date_EPIC[2]}/png/{image_name_EPIC}.png?api_key={token}"
-              
+
         response_image_EPIC = requests.get(url_image_EPIC)
         response_image_EPIC.raise_for_status()
 
@@ -92,10 +89,9 @@ def main():
     fetch_NASA_day_launch(file_path, token_NASA)
     get_image_EPIC(token_NASA)
 
-
     while True:
         files = os.listdir(file_path)
-        file =  files[random.randint(0, len(files)-1)]
+        file = files[random.randint(0, len(files) - 1)]
         bot.send_document(chat_id=chat_id, document=open(file_path + file, 'rb'))
         time.sleep(86400)
 
